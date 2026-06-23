@@ -3,6 +3,11 @@ console.log('Скрипт карты успешно запущен!');
 WA.onInit().then(() => {
     console.log('API Куб.Мета готово!');
 
+    // ТЕСТ: Отправляем сообщение в чат сразу при загрузке
+    try {
+        WA.chat.sendChatMessage("Скрипт успешно подключен к карте! Если вы это видите, код управляет игрой.", "Система Отладки");
+    } catch(e) { console.error("Ошибка чата:", e); }
+
     // ========================================================
     // 1. АВТОМАТИЧЕСКИЕ ДВЕРИ
     // ========================================================
@@ -21,8 +26,6 @@ WA.onInit().then(() => {
             WA.room.showLayer('doorsUnder/door_closed_' + suffix);
         });
     }
-    
-    // Активируем двери
     simpleOpenCloseDoors("main");
 
     // ========================================================
@@ -40,10 +43,10 @@ WA.onInit().then(() => {
                     url: "https://playtictactoe.org/pong", 
                     origin: "player", 
                     position: {
-                        x: 655, 
-                        y: 172, 
-                        width: 249,   
-                        height: 209
+                        x: 20, 
+                        y: 20, 
+                        width: 450,   
+                        height: 350
                     },
                     allow: "autoplay",
                     allowApi: true 
