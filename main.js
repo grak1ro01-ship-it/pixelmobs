@@ -40,10 +40,10 @@ WA.onInit().then(() => {
                     url: "https://playtictactoe.org/pong", 
                     origin: "player", 
                     position: {
-                        x: 20, 
-                        y: 20, 
-                        width: 450,   
-                        height: 350
+                        x: 655, 
+                        y: 172, 
+                        width: 249,   
+                        height: 209
                     },
                     allow: "autoplay",
                     allowApi: true 
