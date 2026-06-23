@@ -3,13 +3,38 @@ console.log('Скрипт карты успешно запущен!');
 WA.onInit().then(() => {
     console.log('API Куб.Мета готово!');
 
-    // ТЕСТ: Отправляем сообщение в чат сразу при загрузке
+    // 1. ТЕСТ ЧАТА: Отправляем сообщение локально по НОВОЙ инструкции
     try {
-        WA.chat.sendChatMessage("Скрипт успешно подключен к карте! Если вы это видите, код управляет игрой.", "Система Отладки");
-    } catch(e) { console.error("Ошибка чата:", e); }
+        WA.chat.sendChatMessage('Скрипт успешно подключен! Новая система чата работает.', { 
+            scope: 'local', 
+            author: 'Система Отладки' 
+        });
+    } catch(e) { 
+        console.error("Ошибка чата при старте:", e); 
+    }
+
+    // 2. ТЕСТ ТЕННИСА: Принудительный вызов окна сразу при входе (в обход всех зон)
+    try {
+        WA.room.website.create({
+            name: "pong_game_screen_TEST",
+            url: "https://playtictactoe.org/pong", 
+            origin: "player", 
+            position: {
+                x: 50, 
+                y: 50, 
+                width: 500,   
+                height: 400
+            },
+            allow: "autoplay",
+            allowApi: true 
+        });
+        console.log("Тестовое окно тенниса успешно вызвано!");
+    } catch (error) {
+        console.error("Ошибка принудительного вызова тенниса:", error);
+    }
 
     // ========================================================
-    // 1. АВТОМАТИЧЕСКИЕ ДВЕРИ
+    // 3. ЛОГИКА АВТОМАТИЧЕСКИХ ДВЕРЕЙ
     // ========================================================
     function simpleOpenCloseDoors(suffix) {
         WA.room.onEnterLayer('doorsteps/doorstep_' + suffix).subscribe(() => {
@@ -29,12 +54,15 @@ WA.onInit().then(() => {
     simpleOpenCloseDoors("main");
 
     // ========================================================
-    // 2. ИНТЕРАКТИВНЫЙ ТЕННИС
+    // 4. ЛОГИКА ИНТЕРАКТИВНОГО ТЕННИСА (ПО ЗОНЕ)
     // ========================================================
     let tennisGame = null;
 
     WA.room.onEnterZone('tennis_zone', () => {
-        WA.chat.sendChatMessage("Вы наступили на зону теннисного стола!", "Отладка");
+        console.log("Игрок вошел в tennis_zone");
+        try {
+            WA.chat.sendChatMessage('Вы наступили на зону теннисного стола!', { scope: 'local', author: 'Отладка' });
+        } catch(e) {}
 
         if (!tennisGame) {
             try {
@@ -51,15 +79,18 @@ WA.onInit().then(() => {
                     allow: "autoplay",
                     allowApi: true 
                 });
-                WA.chat.sendChatMessage("🏓 Теннис активирован!", "Система");
             } catch (error) {
-                console.error("Ошибка создания тенниса:", error);
+                console.error("Ошибка создания тенниса в зоне:", error);
             }
         }
     });
 
     WA.room.onLeaveZone('tennis_zone', () => {
-        WA.chat.sendChatMessage("Вы вышли из зоны теннисного стола.", "Отладка");
+        console.log("Игрок вышел из tennis_zone");
+        try {
+            WA.chat.sendChatMessage('Вы вышли из зоны теннисного стола.', { scope: 'local', author: 'Отладка' });
+        } catch(e) {}
+        
         if (tennisGame) {
             WA.room.website.delete("pong_game_screen");
             tennisGame = null;
